@@ -118,8 +118,13 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Firmware\" />
+    <Content Include="Firmware\i2c_master.cpp" />
+    <Content Include="Firmware\i2c_master.hpp" />
+    <Content Include="Firmware\main.cpp" />
+    <Content Include="Firmware\uart.cpp" />
+    <Content Include="Firmware\uart.hpp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
