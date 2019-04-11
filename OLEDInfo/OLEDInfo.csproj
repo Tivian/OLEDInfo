@@ -7,7 +7,7 @@
     <ProjectGuid>{4B12DCFF-AA96-4331-9B0D-F25E22F4F818}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Tivian.Display</RootNamespace>
-    <AssemblyName>Display</AssemblyName>
+    <AssemblyName>OLEDInfo</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

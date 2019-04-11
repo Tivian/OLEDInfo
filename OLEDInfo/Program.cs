@@ -11,7 +11,7 @@ using OpenHardwareMonitor.Hardware;
 using Tivian.Utilities;
 
 namespace Tivian.Display {
-    class Program {
+    class OLEDInfo {
         private static bool isRunning = true;
         private static readonly string diplayPort = "COM1";
         private static readonly int baudrate = 170000;
