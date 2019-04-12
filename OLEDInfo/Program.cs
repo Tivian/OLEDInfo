@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using OpenHardwareMonitor.Hardware;
+using Microsoft.Win32;
 using Tivian.Utilities;
 
 namespace Tivian.Display {
@@ -145,7 +146,11 @@ namespace Tivian.Display {
             using (var img = new Bitmap(disp.Width, disp.Height))
             using (var g = Graphics.FromImage(img)) {
                 g.TextRenderingHint = TextRenderingHint.SingleBitPerPixelGridFit;
-                Application.ApplicationExit += (sender, e) => disp.Dispose();
+                void onExit(object sender, SessionEndedEventArgs e) {
+                    disp.Dispose();
+                   SystemEvents.SessionEnded -= onExit;
+                }
+                SystemEvents.SessionEnded += onExit;
 
                 while (isRunning) {
                     g.Clear(Color.Black);
