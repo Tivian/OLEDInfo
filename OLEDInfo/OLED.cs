@@ -81,6 +81,27 @@ namespace Tivian.Display {
             colStart = (byte)((0x80 - width) / 2);
             colEnd = (byte)(colStart + width);
 
+            Init();
+            Init(); // second call needed because of the bug in firmware
+        }
+
+        ~OLED() {
+            Dispose();
+        }
+
+        private bool disposed = false;
+
+        public void Dispose() {
+            if (!disposed) {
+                Hide();
+                Clear();
+                disposed = true;
+            }
+
+            serialInterface.Dispose();
+        }
+
+        public void Init() {
             serialInterface.Command(
                 Const.DISPLAYOFF,
                 Const.SETDISPLAYCLOCKDIV, settings.DisplayClockDiv,
@@ -101,22 +122,6 @@ namespace Tivian.Display {
             Contrast = 0xCF;
             Clear();
             Show();
-        }
-
-        ~OLED() {
-            Dispose();
-        }
-
-        private bool disposed = false;
-
-        public void Dispose() {
-            if (!disposed) {
-                Hide();
-                Clear();
-                disposed = true;
-            }
-
-            serialInterface.Dispose();
         }
         
         public void Display(Image img, bool invert = false) {
