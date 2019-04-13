@@ -63,12 +63,13 @@ namespace Tivian.Display {
             int current = 0;
             var screens = new List<Screen>() {
                 new Screen() { // current time
-                    Delay = 30000,
+                    Delay = defaultDelay,
                     Draw = (g) => {
                         var timeFont = new Font(fontCollection.Families[0], font.Size * 1.5f);
                         string time = DateTime.Now.ToString("HH:mm");
                         var measure = g.MeasureString(time, timeFont);
                         g.DrawString(time, timeFont, pen.Brush, (disp.Width - measure.Width) / 2.0f, (disp.Height - measure.Height) / 2.0f);
+                        
                     }
                 },
 
