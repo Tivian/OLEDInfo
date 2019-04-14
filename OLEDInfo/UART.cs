@@ -45,10 +45,8 @@ namespace Tivian.Display {
         private void Send(byte[] data, byte ctrl) {
             var size = data.Length + 1;
 
-            try {
-                Port.Write(new byte[] { Address, (byte) (size >> 8), (byte) (size & 0xff), ctrl }, 0, 4);
-                Port.Write(data, 0, data.Length);
-            } catch (IOException) { }
+            Port.Write(new byte[] { Address, (byte) (size >> 8), (byte) (size & 0xff), ctrl }, 0, 4);
+            Port.Write(data, 0, data.Length);
         }
     }
 }

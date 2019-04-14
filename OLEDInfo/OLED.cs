@@ -81,8 +81,13 @@ namespace Tivian.Display {
             colStart = (byte)((0x80 - width) / 2);
             colEnd = (byte)(colStart + width);
 
-            Init();
-            Init(); // second call needed because of the bug in firmware
+            try {
+                Init();
+            } catch (IOException) {
+                File.AppendAllText("error.log", $"[{DateTime.Now}] IOException: Can't initialize OLED screen\n");
+                System.Windows.Forms.MessageBox.Show("Can't initialize OLED screen!");
+                Environment.Exit(0);
+            }
         }
 
         ~OLED() {
@@ -150,6 +155,8 @@ namespace Tivian.Display {
                 }
             }
 
+            img = null;
+            pixels = null;
             Display(!invert ? rawData : rawData.Select(x => (byte)(255 - x)).ToArray());
         }
 
