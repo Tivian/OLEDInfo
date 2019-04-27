@@ -21,6 +21,7 @@ namespace Tivian.Display {
 
         private static readonly float fontSize = 20f;
         private static readonly Font font = new Font("Consolas", fontSize);
+        private static readonly Font smallFont = new Font(font.FontFamily, font.Size / 2.5f);
         private static readonly Pen pen = new Pen(Color.White);
         private static readonly int defaultDelay = 1000;
 
@@ -47,7 +48,6 @@ namespace Tivian.Display {
 
             Action<Graphics, string[], Func<string, string>> printSensors = (g, labels, value) => {
                 var baseLine = 0.0f;
-                var smallFont = new Font(font.FontFamily, font.Size / 2.5f);
                 string text = string.Empty;
                 SizeF measure = SizeF.Empty;
 
@@ -61,15 +61,18 @@ namespace Tivian.Display {
             };
 
             int current = 0;
+            bool blink = false;
             var screens = new List<Screen>() {
                 new Screen() { // current time
                     Delay = defaultDelay,
                     Draw = (g) => {
                         var timeFont = new Font(fontCollection.Families[0], font.Size * 1.5f);
-                        string time = DateTime.Now.ToString("HH:mm");
-                        var measure = g.MeasureString(time, timeFont);
-                        g.DrawString(time, timeFont, pen.Brush, (disp.Width - measure.Width) / 2.0f, (disp.Height - measure.Height) / 2.0f);
-                        
+                        var time = DateTime.Now;
+                        string timeStr = $"{time.ToString("H:mm"),5}";
+                        var measure = g.MeasureString(timeStr, timeFont);
+                        if (blink = !blink)
+                            timeStr = timeStr.Replace(':', ' ');
+                        g.DrawString(timeStr, timeFont, pen.Brush, (disp.Width - measure.Width) / 2.0f, (disp.Height - measure.Height) / 2.0f);
                     }
                 },
 
@@ -134,6 +137,11 @@ namespace Tivian.Display {
 
             KeyLogg.Instance.OnKeyDown += (sender, e) => {
                 if (e.Key == Keys.F11 && e.ModifierKeys.HasFlag(Keys.Control)) {
+                    if (e.ModifierKeys.HasFlag(Keys.Shift)) {
+                        disp.Restart();
+                        return;
+                    }
+
                     if (++current == screens.Count)
                         current = 0;
 

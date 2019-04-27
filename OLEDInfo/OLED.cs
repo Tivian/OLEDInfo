@@ -128,6 +128,11 @@ namespace Tivian.Display {
             Clear();
             Show();
         }
+
+        public void Restart() {
+            Clear();
+            Init();
+        }
         
         public void Display(Image img, bool invert = false) {
             if (img.Width > Width || img.Height > Height)
