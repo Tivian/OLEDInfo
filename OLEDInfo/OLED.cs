@@ -90,9 +90,7 @@ namespace Tivian.Display {
             }
         }
 
-        ~OLED() {
-            Dispose();
-        }
+        public void Close() => Dispose();
 
         private bool disposed = false;
 

@@ -151,7 +151,17 @@ namespace Tivian.Display {
                 }
             };
 
-            using (disp = new OLED(new UART(diplayPort, baudrate, displayAddr)))
+            UART uart = null;
+            while (true) {
+                try {
+                    uart = new UART(diplayPort, baudrate, displayAddr);
+                    break;
+                } catch {
+                    Thread.Sleep(1000);
+                }
+            }
+
+            using (disp = new OLED(uart))
             using (var img = new Bitmap(disp.Width, disp.Height))
             using (var g = Graphics.FromImage(img)) {
                 g.TextRenderingHint = TextRenderingHint.SingleBitPerPixelGridFit;
@@ -174,6 +184,9 @@ namespace Tivian.Display {
                 }
             }
 
+            try {
+                uart.Dispose();
+            } catch { }
             computer.Close();
         }
     }
