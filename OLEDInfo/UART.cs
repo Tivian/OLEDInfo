@@ -7,7 +7,16 @@ namespace Tivian.Display {
         private readonly SerialPort Port;
         public readonly byte Address;
 
-        public UART(string device, int baudRate, byte address) {
+        public static UART Connect(string device, int baudRate, byte address) {
+            for (int i = 0; i < 5; i++) { // dirty fix
+                using (var uart = new UART(device, baudRate, address))
+                    uart.Command(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 });
+            }
+
+            return new UART(device, baudRate, address);
+        }
+
+        private UART(string device, int baudRate, byte address) {
             Address = address;
 
             if (!SerialPort.GetPortNames().Contains(device)) {
