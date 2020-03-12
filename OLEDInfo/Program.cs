@@ -10,6 +10,9 @@ using System.Windows.Forms;
 using OpenHardwareMonitor.Hardware;
 using Microsoft.Win32;
 using Tivian.Utilities;
+using System.IO;
+using System.Text;
+using System.Diagnostics;
 
 namespace Tivian.Display {
     class OLEDInfo {
@@ -36,7 +39,11 @@ namespace Tivian.Display {
 
         static async Task Main() {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+            AppDomain.CurrentDomain.UnhandledException += CrashLogger;
             fontCollection.AddResourceFont(Properties.Resources._7_segment_mono);
+
+            using (Process p = Process.GetCurrentProcess())
+                p.PriorityClass = ProcessPriorityClass.Normal;
 
             computer = new Computer() {
                 CPUEnabled = true,
@@ -138,7 +145,7 @@ namespace Tivian.Display {
             KeyLogg.Instance.OnKeyDown += (sender, e) => {
                 if (e.Key == Keys.F11 && e.ModifierKeys.HasFlag(Keys.Control)) {
                     if (e.ModifierKeys.HasFlag(Keys.Shift)) {
-                        disp.Restart();
+                        disp?.Restart();
                         return;
                     }
 
@@ -151,16 +158,7 @@ namespace Tivian.Display {
                 }
             };
 
-            UART uart = null;
-            while (true) {
-                try {
-                    uart = new UART(diplayPort, baudrate, displayAddr);
-                    break;
-                } catch {
-                    Thread.Sleep(1000);
-                }
-            }
-
+            using (var uart = UART.Connect(diplayPort, baudrate, displayAddr))
             using (disp = new OLED(uart))
             using (var img = new Bitmap(disp.Width, disp.Height))
             using (var g = Graphics.FromImage(img)) {
@@ -184,10 +182,15 @@ namespace Tivian.Display {
                 }
             }
 
-            try {
-                uart.Dispose();
-            } catch { }
             computer.Close();
+        }
+
+        private static void CrashLogger(object sender, UnhandledExceptionEventArgs args) {
+            var ex = (Exception) args.ExceptionObject;
+            var sb = new StringBuilder();
+            sb.AppendLine(DateTime.Now.ToString("dd.MM.YYYY hh:mm:ss"));
+            sb.AppendLine($"{ex}");
+            File.WriteAllText("crash.log", sb.ToString());
         }
     }
 }
