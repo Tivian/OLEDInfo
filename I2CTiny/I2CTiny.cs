@@ -4,7 +4,7 @@ using LibUsbDotNet.Main;
 using System;
 using System.Linq;
 
-namespace I2CTiny {
+namespace I2CTinyUSB {
     public class I2CTiny : IDisposable {
         private readonly int[] VID = { 0x0403, 0x1c40 };
         private readonly int[] PID = { 0xc631, 0x0534 };
@@ -14,6 +14,7 @@ namespace I2CTiny {
         private readonly byte I2C_M_RD = 0x01;
 
         private IUsbDevice Device;
+		private IUsbContext Context;
 
 		[Flags]
 		enum I2CCommand : byte {
@@ -38,15 +39,14 @@ namespace I2CTiny {
 		}
 
 		public void Connect() {
-            using (var context = new UsbContext()) {
-                Device = context.Find(d => VID.Any(vid => d.VendorId == vid)
-                    && PID.Any(pid => d.ProductId == pid));
+			Context = new UsbContext();
+            Device = Context.Find(d => VID.Any(vid => d.VendorId == vid)
+                && PID.Any(pid => d.ProductId == pid)).Clone();
 
-                if (Device is null)
-                    throw new Exception("Device isn't connected!");
+            if (Device is null)
+                throw new Exception("Device isn't connected!");
 
-                Device.Open();
-            }
+            Device.Open();
         }
 
 		public int ReadCommand(UsbCommand cmd, byte[] data, short value = 0, short index = 0) {
@@ -146,7 +146,8 @@ namespace I2CTiny {
         }
 
         public void Dispose() {
-            Device.Dispose();
+			Context.Dispose();
+			Device.Dispose();
         }
     }
 }

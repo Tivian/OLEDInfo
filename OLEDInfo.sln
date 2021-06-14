@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OLEDInfo", "OLEDInfo\OLEDInfo.csproj", "{33BAEEE2-8B86-4ECA-AC17-1B37C603E8AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "I2CTiny", "I2CTiny\I2CTiny.csproj", "{F8E50E6E-4472-4B49-88A8-EF6DB443283A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "I2CTinyUSB", "I2CTiny\I2CTinyUSB.csproj", "{F8E50E6E-4472-4B49-88A8-EF6DB443283A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
